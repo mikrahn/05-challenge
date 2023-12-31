@@ -1,6 +1,7 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
 $(document).ready(function () {
   var startingHour = 9;
   var Meridiem = "AM";
@@ -20,9 +21,12 @@ $(document).ready(function () {
     for (var i = 0; i < plannerHours.length; i++) {
       var plannerHour = plannerHours[i];
 
-      //   var textTime = startingHour + Meridiem;
+      // create each row for each hour using template string literal as id value
+
       var rowDiv = $("<div>").attr("id", `${plannerHour}`);
       currentID = rowDiv.attr("id");
+
+      // logic to assign past, present, future class to each row
 
       if (Number(currentID) < Number(currentHour)) {
         rowDiv.attr("class", "row time-block past");
@@ -32,20 +36,21 @@ $(document).ready(function () {
         rowDiv.attr("class", "row time-block future");
       }
 
+      // create dive to hold time and assign time
       var timeDiv = $("<div>").attr(
         "class",
         "col-2 col-md-1 hour text-center py-3"
       );
 
-      //   if (Number(plannerHours[i]) > "12") {
-      //     console.log(Number(plannerHour[i]));
-      //   }
       timeDiv.text(`${plannerHour} ${plannerMeridiem[i]}`);
 
+      // create text area
       var textArea = $("<textarea>").attr(
         "class",
         "col-8 col-md-10 description"
       );
+
+      // create button area with attributes
 
       var buttonArea = $("<button>").attr(
         "class",
@@ -60,20 +65,30 @@ $(document).ready(function () {
 
       textArea.attr("rows", 3);
 
+      // append html objects to create structure dynamically
+
       containerP.append(rowDiv);
 
       rowDiv.append(timeDiv, textArea, buttonArea);
 
       buttonArea.append(iArea);
-
-      //   console.log(Number(currentID) === Number(currentHour));
-      //   console.log(rowDiv);
     }
   }
   //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
+
+  function renderLastTask($parentID, textArea) {
+    savedInput = localStorage.getItem(textArea);
+
+    if (!savedInput) {
+      return;
+    }
+
+    textArea.val(savedInput);
+    console.log(savedInput);
+  }
   //
   // TODO: Add code to display the current date in the header of the page.
 
@@ -90,36 +105,19 @@ $(document).ready(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
 
-  // test commit
-
   $(".btn").click(function (event) {
     event.preventDefault();
     var parentID = this.parentNode.id;
     console.log(parentID);
 
     var $parentID = $(`#${parentID}`);
+
     var textArea = $parentID.children("textarea");
-
-    function renderLastTask() {
-      savedInput = localStorage.getItem(textArea);
-      console.log(savedInput);
-
-      if (!savedInput) {
-        return;
-      }
-
-      textArea.val(savedInput);
-      console.log(savedInput);
-    }
 
     var textInput = textArea.val();
 
-    // console.log(textInput);
-
     localStorage.setItem(textArea, textInput);
 
-    renderLastTask();
-
-    // console.log(localStorage.getItem(textArea));
+    renderLastTask($parentID, textArea);
   });
 });
