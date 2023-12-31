@@ -8,14 +8,6 @@ $(document).ready(function () {
   var plannerMeridiem = ["am", "am", "am", "pm", "pm", "pm", "pm", "pm", "pm"];
   var containerP = $(".container-fluid");
 
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
   // attribute of each time-block be used to conditionally add or remove the
@@ -90,4 +82,44 @@ $(document).ready(function () {
   $("#currentDay").text(`Current Date / Time: ${headerLead}`);
 
   createHourBlock(plannerHours.length);
+
+  // TODO: Add a listener for click events on the save button. This code should
+  // use the id in the containing time-block as a key to save the user input in
+  // local storage. HINT: What does `this` reference in the click listener
+  // function? How can DOM traversal be used to get the "hour-x" id of the
+  // time-block containing the button that was clicked? How might the id be
+  // useful when saving the description in local storage?
+
+  // test commit
+
+  $(".btn").click(function (event) {
+    event.preventDefault();
+    var parentID = this.parentNode.id;
+    console.log(parentID);
+
+    var $parentID = $(`#${parentID}`);
+    var textArea = $parentID.children("textarea");
+
+    function renderLastTask() {
+      savedInput = localStorage.getItem(textArea);
+      console.log(savedInput);
+
+      if (!savedInput) {
+        return;
+      }
+
+      textArea.val(savedInput);
+      console.log(savedInput);
+    }
+
+    var textInput = textArea.val();
+
+    // console.log(textInput);
+
+    localStorage.setItem(textArea, textInput);
+
+    renderLastTask();
+
+    // console.log(localStorage.getItem(textArea));
+  });
 });
